@@ -1,0 +1,14 @@
+name: DeathInventory
+version: 1.0.0
+author: rmagur1203
+main: github.rmagur1203.deathinventory.Main
+api-version: 1.19
+commands:
+  deathinfo:
+    description: Get info of death
+    usage: /deathinfo <uuid>
+    permission: deathinventory.readinfo
+  deathrestore:
+    description: Restore items to player
+    usage: /deathrestore <uuid>
+    permission: deathinventory.restore
