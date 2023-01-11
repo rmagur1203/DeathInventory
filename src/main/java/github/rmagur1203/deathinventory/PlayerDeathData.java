@@ -4,13 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -35,7 +33,7 @@ public class PlayerDeathData implements Serializable {
     }
 
     public Inventory toInventory() {
-        Inventory inventory = Bukkit.createInventory(null, 36, playerName);
+        Inventory inventory = Bukkit.createInventory(null, 45, playerName);
 
         for (int i = 0; i < drops.size(); i++) {
             inventory.setItem(i, drops.get(i));
@@ -46,7 +44,8 @@ public class PlayerDeathData implements Serializable {
 
     public boolean saveData(String uuid) {
         try {
-            FileOutputStream fileOut = new FileOutputStream(Main.root + "death-" + uuid + ".data");
+            String root = JavaPlugin.getPlugin(Main.class).getDataFolder().getPath();
+            FileOutputStream fileOut = new FileOutputStream(root + "/death-" + uuid + ".data");
             GZIPOutputStream gzOut = new GZIPOutputStream(fileOut);
             BukkitObjectOutputStream out = new BukkitObjectOutputStream(gzOut);
             out.writeObject(this);
@@ -60,7 +59,11 @@ public class PlayerDeathData implements Serializable {
 
     public static PlayerDeathData loadData(String uuid) {
         try {
-            FileInputStream fileIn = new FileInputStream(Main.root + "death-" + uuid + ".data");
+            String root = JavaPlugin.getPlugin(Main.class).getDataFolder().getPath();
+            File file = new File(root + "/death-" + uuid + ".data");
+            if (!file.exists())
+                return null;
+            FileInputStream fileIn = new FileInputStream(file);
             GZIPInputStream gzIn = new GZIPInputStream(fileIn);
             BukkitObjectInputStream in = new BukkitObjectInputStream(gzIn);
             PlayerDeathData data = (PlayerDeathData) in.readObject();

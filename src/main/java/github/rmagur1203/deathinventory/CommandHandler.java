@@ -5,18 +5,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class CommandHandler implements CommandExecutor {
-    private Main main;
-
-    public CommandHandler(Main main) {
-        this.main = main;
-    }
+    private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             if (command.getName().equalsIgnoreCase("deathinfo")) {
                 onInfo(player, args);
             }
@@ -77,7 +73,7 @@ public class CommandHandler implements CommandExecutor {
         }
 
         String playerName = data.playerName;
-        Player player = main.getServer().getPlayer(playerName);
+        Player player = plugin.getServer().getPlayer(playerName);
         if (player == null) {
             sender.sendMessage("Missing user for saved data. Is the user offline?");
             return;
